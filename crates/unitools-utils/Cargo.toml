@@ -1,0 +1,23 @@
+[package]
+name = "unitools-utils"
+version = "0.1.0"
+edition = "2024"
+authors = ["weidong"]
+description = "工具箱应用的实用工具库"
+
+[dependencies]
+unitools-core = { workspace = true }
+anyhow = "1.0"
+thiserror = "2.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+chrono = "0.4"
+regex = "1.8"
+tokio = { version = "1.44", features = ["fs", "io-util"], optional = true }
+image = { version = "0.25", optional = true }
+base64 = { version = "0.22", optional = true }
+
+[features]
+default = []
+async = ["tokio"]
+image_utils = ["image", "base64"]
