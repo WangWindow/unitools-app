@@ -1,8 +1,8 @@
 [package]
 name = "unitools-app"
 version = "0.1.0"
-edition = "2021"
-authors = ["weidong"]
+edition = "2024"
+authors = ["WangWindow"]
 description = "一个多功能工具箱应用"
 
 [dependencies]
