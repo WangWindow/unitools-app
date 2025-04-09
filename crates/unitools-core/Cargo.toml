@@ -6,7 +6,8 @@ authors = ["WangWindow"]
 description = "工具箱应用的核心库"
 
 [dependencies]
-serde = { version = "1.0", features = ["derive"] }
-thiserror = "2.0"
-anyhow = "1.0"
-dyn-clone = "1.0"
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
+thiserror = "2.0.12"
+anyhow = "1.0.97"
+dyn-clone = "1.0.19"

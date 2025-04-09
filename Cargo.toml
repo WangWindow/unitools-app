@@ -6,31 +6,32 @@ authors = ["WangWindow"]
 description = "一个多功能工具箱应用"
 
 [dependencies]
-# 核心依赖
-tokio = { version = "1.44", features = ["full"] }
-clap = { version = "4.5", features = ["derive"] }
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-anyhow = "1.0"
-thiserror = "2.0"
-
-# 界面相关
-egui = "0.31"
-eframe = "0.31"
-image = "0.25"
-
-# 工具模块依赖
-chrono = "0.4"
-regex = "1.8"
-rand = "0.9"
-reqwest = { version = "0.12", features = ["json"] }
-
-[workspace]
-members = ["crates/*"]
-
-[workspace.dependencies]
 unitools-core = { path = "./crates/unitools-core" }
 unitools-utils = { path = "./crates/unitools-utils" }
+
+# 核心依赖
+tokio = { version = "1.44.2", features = ["full"] }
+clap = { version = "4.5.35", features = ["derive"] }
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
+anyhow = "1.0.97"
+thiserror = "2.0.12"
+
+# 界面相关
+egui = "0.31.1"
+eframe = "0.31.1"
+image = "0.25.6"
+rfd = "0.15.3"
+dark-light = "2.0"
+ico = "0.4"  # 用于加载.ic0.4.40文件
+
+# 工具模块依赖
+chrono = "0.4.40"
+regex = "1.11.1"
+rand = "0.9"
+reqwest = { version = "0.12.15", features = ["json"] }
+dirs = "6.0"
+env_logger = "0.11.8"
 
 [features]
 default = ["file_tools", "text_tools", "network_tools"]

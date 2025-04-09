@@ -11,21 +11,19 @@ use crate::ui::{self, Page};
 
 /// 主应用状态
 pub struct UniToolsApp {
-    config: Arc<Mutex<AppConfig>>,
+    pub config: Arc<Mutex<AppConfig>>,
     plugin_manager: Arc<PluginManager>,
     tools: Vec<Arc<dyn Tool>>,
     current_page: Page,
     current_tool: Option<String>,
-    categories: HashMap<ToolCategory, Vec<Arc<dyn Tool>>>,
+    pub categories: HashMap<ToolCategory, Vec<Arc<dyn Tool>>>,
 }
 
 impl UniToolsApp {
     /// 创建新的应用实例
     pub fn new(cc: &eframe::CreationContext<'_>, config: AppConfig) -> Self {
         // 设置默认主题
-        if let Some(ctx) = &cc.egui_ctx {
-            ui::setup_theme(ctx, config.theme);
-        }
+        ui::setup_theme(&cc.egui_ctx, config.theme);
 
         // 创建插件管理器
         let plugin_manager = Arc::new(PluginManager::new());

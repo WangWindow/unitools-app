@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::path::PathBuf;
 use std::sync::Arc;
 use unitools_core::error::ToolError;
 use unitools_core::tool::{Tool, ToolCategory, ToolContext, ToolResult};

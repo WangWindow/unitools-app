@@ -6,16 +6,16 @@ authors = ["WangWindow"]
 description = "工具箱应用的实用工具库"
 
 [dependencies]
-unitools-core = { workspace = true }
-anyhow = "1.0"
-thiserror = "2.0"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-chrono = "0.4"
-regex = "1.8"
-tokio = { version = "1.44", features = ["fs", "io-util"], optional = true }
-image = { version = "0.25", optional = true }
-base64 = { version = "0.22", optional = true }
+unitools-core = { path = "../unitools-core" }
+anyhow = "1.0.97"
+thiserror = "2.0.12"
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
+chrono = "0.4.40"
+regex = "1.11.1"
+tokio = { version = "1.44.2", features = ["fs", "io-util"], optional = true }
+image = { version = "0.25.6", optional = true }
+base64 = { version = "0.22.1", optional = true }
 
 [features]
 default = []

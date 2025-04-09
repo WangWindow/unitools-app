@@ -25,7 +25,7 @@ pub fn parse_datetime(s: &str, fmt: &str) -> Result<DateTime<Utc>, ToolError> {
     let naive = NaiveDateTime::parse_from_str(s, fmt)
         .map_err(|e| ToolError::ParseError(format!("解析日期时间错误: {}", e)))?;
 
-    let dt = DateTime::<Utc>::from_utc(naive, Utc);
+    let dt = Utc.from_utc_datetime(&naive);
     Ok(dt)
 }
 
@@ -39,8 +39,7 @@ pub fn parse_iso8601(s: &str) -> Result<DateTime<Utc>, ToolError> {
 
 /// 转换时间戳（秒）为DateTime<Utc>
 pub fn timestamp_to_datetime(timestamp: i64) -> DateTime<Utc> {
-    let naive = NaiveDateTime::from_timestamp_opt(timestamp, 0).unwrap_or_default();
-    DateTime::<Utc>::from_utc(naive, Utc)
+    DateTime::from_timestamp(timestamp, 0).unwrap_or_default()
 }
 
 /// 转换DateTime<Utc>为时间戳（秒）
@@ -76,7 +75,7 @@ pub fn add_days<Tz: TimeZone>(dt: &DateTime<Tz>, days: i64) -> DateTime<Tz>
 where
     Tz::Offset: std::fmt::Display,
 {
-    *dt + Duration::days(days)
+    dt.clone() + Duration::days(days)
 }
 
 /// 增加/减少小时
@@ -84,7 +83,7 @@ pub fn add_hours<Tz: TimeZone>(dt: &DateTime<Tz>, hours: i64) -> DateTime<Tz>
 where
     Tz::Offset: std::fmt::Display,
 {
-    *dt + Duration::hours(hours)
+    dt.clone() + Duration::hours(hours)
 }
 
 /// 获取日期的年、月、日

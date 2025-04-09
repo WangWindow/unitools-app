@@ -1,5 +1,4 @@
 use eframe::egui;
-use unitools_core::tool::ToolCategory;
 
 /// 渲染主页
 pub fn render_home_page(ctx: &egui::Context, app: &mut crate::app::UniToolsApp) {
@@ -28,14 +27,16 @@ pub fn render_home_page(ctx: &egui::Context, app: &mut crate::app::UniToolsApp) 
             .striped(true)
             .show(ui, |ui| {
                 let mut categories: Vec<_> = categories.keys().collect();
-                categories.sort_by_key(|c| std::mem::discriminant(*c));
+                // 使用另一种方式进行排序，避免Discriminant<ToolCategory>没有实现Ord的问题
+                categories.sort_by(|a, b| a.to_string().cmp(&b.to_string()));
 
                 for (i, &category) in categories.iter().enumerate() {
                     if i > 0 && i % 3 == 0 {
                         ui.end_row();
                     }
 
-                    if let Some(tools) = categories.get(category) {
+                    // 直接使用HashMap的get方法访问值，而不是对Vec进行索引
+                    if let Some(tools) = app.categories.get(category) {
                         ui.vertical(|ui| {
                             ui.heading(format!("{}", category));
                             ui.label(format!("{}个工具", tools.len()));

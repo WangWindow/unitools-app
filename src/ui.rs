@@ -5,8 +5,6 @@ mod theme;
 mod tool;
 
 use eframe::egui;
-use unitools_core::config::Theme;
-use unitools_core::tool::Tool;
 
 pub use about::render_about_page;
 pub use home::render_home_page;
@@ -25,6 +23,20 @@ pub enum Page {
 
 /// 渲染侧边导航栏
 pub fn render_sidebar(ctx: &egui::Context, app: &mut crate::app::UniToolsApp) {
+    // 预先收集工具信息，避免在闭包中直接访问app
+    let mut categorized_tools = Vec::new();
+
+    let categories: Vec<_> = app.categories.keys().collect();
+    for &category in &categories {
+        if let Some(tools) = app.categories.get(category) {
+            let tool_names: Vec<String> = tools.iter().map(|t| t.name().to_string()).collect();
+            categorized_tools.push((category.to_string(), tool_names));
+        }
+    }
+
+    // 排序分类
+    categorized_tools.sort_by(|(a, _), (b, _)| a.cmp(b));
+
     egui::SidePanel::left("sidebar").show(ctx, |ui| {
         ui.vertical_centered(|ui| {
             ui.heading("UniTools 工具箱");
@@ -42,20 +54,14 @@ pub fn render_sidebar(ctx: &egui::Context, app: &mut crate::app::UniToolsApp) {
         egui::CollapsingHeader::new("工具分类")
             .default_open(true)
             .show(ui, |ui| {
-                // 获取所有工具分类并排序
-                let mut categories: Vec<_> = app.categories.keys().collect();
-                categories.sort_by_key(|c| std::mem::discriminant(*c));
-
-                for &category in &categories {
-                    if let Some(tools) = app.categories.get(category) {
-                        ui.collapsing(format!("{} ({})", category, tools.len()), |ui| {
-                            for tool in tools {
-                                if ui.button(tool.name()).clicked() {
-                                    app.navigate_to_tool(tool.name());
-                                }
+                for (category, tool_names) in &categorized_tools {
+                    ui.collapsing(format!("{} ({})", category, tool_names.len()), |ui| {
+                        for tool_name in tool_names {
+                            if ui.button(tool_name).clicked() {
+                                app.navigate_to_tool(tool_name);
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             });
 

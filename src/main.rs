@@ -5,6 +5,7 @@ mod ui;
 
 use clap::Parser;
 use eframe::egui;
+use std::path::Path;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -20,6 +21,44 @@ struct Args {
     /// 调试模式
     #[arg(short, long)]
     debug: bool,
+}
+
+/// 加载应用图标
+fn load_icon() -> Option<egui::IconData> {
+    let icon_path = Path::new("assets/icon.ico");
+    match std::fs::read(icon_path) {
+        Ok(icon_data) => {
+            let (icon_rgba, icon_width, icon_height) =
+                match ico::IconDir::read(std::io::Cursor::new(icon_data)) {
+                    Ok(icon_dir) => {
+                        if let Some(entry) = icon_dir.entries().get(0) {
+                            let icon = entry.decode().unwrap();
+                            let width = icon.width() as u32;
+                            let height = icon.height() as u32;
+                            let rgba = icon.rgba_data().to_vec();
+                            (rgba, width, height)
+                        } else {
+                            eprintln!("图标文件不包含任何图标");
+                            return None;
+                        }
+                    }
+                    Err(e) => {
+                        eprintln!("无法解析图标文件: {}", e);
+                        return None;
+                    }
+                };
+
+            Some(egui::IconData {
+                rgba: icon_rgba,
+                width: icon_width,
+                height: icon_height,
+            })
+        }
+        Err(e) => {
+            eprintln!("无法加载图标文件: {}", e);
+            None
+        }
+    }
 }
 
 fn main() -> Result<(), eframe::Error> {
@@ -41,8 +80,16 @@ fn main() -> Result<(), eframe::Error> {
 
     let app_config = config::load_or_create_config(&config_path);
 
+    // 创建视口构建器
+    let mut viewport_builder = egui::ViewportBuilder::default().with_inner_size([1024.0, 768.0]);
+
+    // 如果图标加载成功，则添加图标
+    if let Some(icon) = load_icon() {
+        viewport_builder = viewport_builder.with_icon(std::sync::Arc::new(icon));
+    }
+
     let options = eframe::NativeOptions {
-        initial_window_size: Some(egui::vec2(1024.0, 768.0)),
+        viewport: viewport_builder,
         ..Default::default()
     };
 
@@ -50,6 +97,6 @@ fn main() -> Result<(), eframe::Error> {
     eframe::run_native(
         "UniTools 工具箱",
         options,
-        Box::new(|cc| Box::new(app::UniToolsApp::new(cc, app_config))),
+        Box::new(|cc| Ok(Box::new(app::UniToolsApp::new(cc, app_config)))),
     )
 }
