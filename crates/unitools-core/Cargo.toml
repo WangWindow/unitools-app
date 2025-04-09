@@ -2,7 +2,7 @@
 name = "unitools-core"
 version = "0.1.0"
 edition = "2024"
-authors = ["weidong"]
+authors = ["WangWindow"]
 description = "工具箱应用的核心库"
 
 [dependencies]
